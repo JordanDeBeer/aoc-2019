@@ -8,11 +8,12 @@ func TestFindClosestCross(t *testing.T) {
 	cases := []struct {
 		InputOne []string
 		InputTwo []string
-		Output   int
+		Distance int
+		Steps    int
 	}{
-		{[]string{"R8", "U5", "L5", "D3"}, []string{"U7", "R6", "D4", "L4"}, 6},
-		{[]string{"R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"}, []string{"U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"}, 159},
-		{[]string{"R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51"}, []string{"U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7"}, 135},
+		{[]string{"R8", "U5", "L5", "D3"}, []string{"U7", "R6", "D4", "L4"}, 6, 30},
+		{[]string{"R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"}, []string{"U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"}, 159, 610},
+		{[]string{"R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51"}, []string{"U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7"}, 135, 410},
 	}
 	for i, o := range cases {
 		w1 := NewWire(o.InputOne)
@@ -20,8 +21,12 @@ func TestFindClosestCross(t *testing.T) {
 		x := FindCrosses(w1, w2)
 		t.Logf("Crosses: %v", x)
 		y := FindClosestCross(x)
-		if y != o.Output {
-			t.Errorf("Failed on Case: %v, Expected: %v, Got: %v", i, o.Output, y)
+		if y != o.Distance {
+			t.Errorf("Failed on Distance Case: %v, Expected: %v, Got: %v", i, o.Distance, y)
+		}
+		z := FindLeastStepsCross(x)
+		if z != o.Steps {
+			t.Errorf("Failed on Steps Case: %v, Expected: %v, Got: %v", i, o.Steps, z)
 		}
 	}
 }

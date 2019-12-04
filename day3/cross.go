@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"strconv"
 )
 
@@ -19,7 +20,6 @@ func (w Wire) lastY() int {
 type Coordinate [2]int
 
 func NewWire(c []string) Wire {
-	//wire := Wire{Path: []Coordinate{Coordinate{0, 0}}}
 	var wire Wire
 
 	curX := 0
@@ -53,23 +53,35 @@ func NewWire(c []string) Wire {
 	return wire
 }
 
-func FindCrosses(x, y Wire) []Coordinate {
-	crosses := []Coordinate{}
-	for _, xCoords := range x.Path {
-		for _, yCoords := range y.Path {
+func FindCrosses(x, y Wire) map[Coordinate]int {
+	crosses := make(map[Coordinate]int)
+	for xIndex, xCoords := range x.Path {
+		for yIndex, yCoords := range y.Path {
 			if xCoords == yCoords && xCoords != [2]int{0, 0} {
-				crosses = append(crosses, yCoords)
+				// Have to add 2 because index starts at 0
+				crosses[yCoords] = xIndex + yIndex + 2
 			}
 		}
 	}
 	return crosses
 }
 
-func FindClosestCross(x []Coordinate) int {
-	shortest := abs(x[0][0]) + abs(x[0][1])
-	for _, i := range x {
-		if abs(i[0])+abs(i[1]) < shortest {
-			shortest = abs(i[0]) + abs(i[1])
+func FindClosestCross(x map[Coordinate]int) int {
+	//shortest := abs(x[0][0]) + abs(x[0][1])
+	shortest := math.MaxInt64
+	for k, _ := range x {
+		if abs(k[0])+abs(k[1]) < shortest {
+			shortest = abs(k[0]) + abs(k[1])
+		}
+	}
+	return shortest
+}
+
+func FindLeastStepsCross(x map[Coordinate]int) int {
+	shortest := math.MaxInt64
+	for _, v := range x {
+		if v < shortest {
+			shortest = v
 		}
 	}
 	return shortest

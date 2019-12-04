@@ -8,5 +8,8 @@ func main() {
 
 	x := FindCrosses(w1, w2)
 	y := FindClosestCross(x)
+	fmt.Println(x)
 	fmt.Println(y)
+	z := FindLeastStepsCross(x)
+	fmt.Println(z)
 }
